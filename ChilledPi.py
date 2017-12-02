@@ -20,8 +20,8 @@ GPIO.setup(Output_4, GPIO.OUT)
 
 # Map the on/off state to nicer names for display
 dName = {}
-dName[Active] = 'ON '
-dName[Inactive] = 'OFF'
+dName[True] = 'ON '
+dName[False] = 'OFF'
 
 # Function to set all drives off
 def MotorOff():
@@ -46,7 +46,7 @@ try:
     # Start by turning all drives off
     MotorOff()
     #raw_input('You can now turn on the power, press ENTER to continue')
-    fansOn = Inactive
+    fansOn = False
     while True:
         # Read the temperature in from the file system
         fSensor = open(pathSensor, 'r')
@@ -58,13 +58,13 @@ try:
                 # We have cooled down enough, turn the fans off
                 for fan in lProcessorFans:
                     GPIO.output(fan, GPIO.LOW)
-                fansOn = Inactive
+                fansOn = False
         else:
             if reading >= tempHigh:
                 # We have warmed up enough, turn the fans on
                 for fan in lProcessorFans:
                     GPIO.output(fan, GPIO.HIGH)
-                fansOn = Active
+                fansOn = True
         # Print the latest reading and the current state of all 4 drives
         print '%02.3f %s %s %s %s' % (reading * readingPrintMultiplier, dName[GPIO.input(DRIVE_1)], dName[GPIO.input(DRIVE_2)], dName[GPIO.input(DRIVE_3)], dName[GPIO.input(DRIVE_4)])
         # Wait a while
